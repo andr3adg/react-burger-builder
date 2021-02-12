@@ -6,7 +6,7 @@ const controls = [
   { label: "Salad", type: "salad" },
   { label: "Meat", type: "meat" },
   { label: "Cheese", type: "cheese" },
-  { label: "Meat", type: "meat" },
+  { label: "Bacon", type: "bacon" },
 ];
 
 const buildControls = (props) => (
@@ -14,8 +14,9 @@ const buildControls = (props) => (
     {controls.map((el, i) => {
       return (
         <BuildControl
-          key={el.label + i}
+          key={el.label + i + 1}
           label={el.label}
+          type={el.type}
           add={props.addIngredient}
           remove={props.removeIngredient}
         />
