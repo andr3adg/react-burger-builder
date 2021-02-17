@@ -1,6 +1,9 @@
 import React, { Component, Fragment } from "react";
 import Burger from "../../components/Burger/Burger";
 import BuildControls from "../../components/Burger/BuildControls/BuildControls";
+import Modal from "../../components/UI/Modal/Modal";
+import OrderSummary from "../../components/Burger/OrderSummary/OrderSummary";
+
 const INGREDIENT_PRICES = {
   salad: 0.5,
   cheese: 0.4,
@@ -17,6 +20,7 @@ class BurgerBuilder extends Component {
       meat: 0,
     },
     totalPrice: 4,
+    purchasable: false,
   };
 
   addIngredientHandler = (type) => {
@@ -24,7 +28,10 @@ class BurgerBuilder extends Component {
     let newValue = this.state.ingredients[type] + 1;
     auxIngredients[type] = newValue;
     let newPrice = this.state.totalPrice + INGREDIENT_PRICES[type];
-    this.setState({ ingredients: auxIngredients, totalPrice: newPrice });
+    this.setState(
+      { ingredients: auxIngredients, totalPrice: newPrice },
+      this.updatePurchasableStatus(auxIngredients)
+    );
   };
 
   removeIngredientHandler = (type) => {
@@ -34,8 +41,20 @@ class BurgerBuilder extends Component {
       auxIngredients[type] = newValue;
       auxIngredients[type] = newValue;
       let newPrice = this.state.totalPrice - INGREDIENT_PRICES[type];
-      this.setState({ ingredients: auxIngredients, totalPrice: newPrice });
+      this.setState(
+        { ingredients: auxIngredients, totalPrice: newPrice },
+        this.updatePurchasableStatus(auxIngredients)
+      );
     }
+  };
+
+  updatePurchasableStatus = (updatedIngredients) => {
+    let sum = 0;
+    const ingredients = { ...updatedIngredients };
+    for (let key in ingredients) {
+      sum += ingredients[key];
+    }
+    this.setState({ purchasable: sum > 0 });
   };
 
   render() {
@@ -45,11 +64,15 @@ class BurgerBuilder extends Component {
     }
     return (
       <Fragment>
+        <Modal>
+          <OrderSummary ingredients={this.state.ingredients} />
+        </Modal>
         <Burger ingredients={this.state.ingredients} />
         <BuildControls
           addIngredient={this.addIngredientHandler}
           removeIngredient={this.removeIngredientHandler}
           disabled={disabledKeys}
+          purchasable={this.state.purchasable}
           totalPrice={this.state.totalPrice}
         />
       </Fragment>
