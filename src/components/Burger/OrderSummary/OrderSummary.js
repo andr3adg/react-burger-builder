@@ -2,6 +2,9 @@ import React, { Fragment } from "react";
 import Button from "../../UI/Button/Button";
 
 const orderSummary = (props) => {
+  /*componentDidUpdate() {
+    console.log("deu update");
+  }*/
   let ingList = Object.keys(props.ingredients).map((el) => {
     return (
       <li key={el}>
