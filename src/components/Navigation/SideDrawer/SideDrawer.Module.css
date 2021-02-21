@@ -12,15 +12,8 @@
   transition: transform 0.3s ease-out;
 }
 
-/*@media (min-width: 500px) {
-  .SideDrawer {
-    display: none;
-  }
-}*/
-
 .Open {
-  /*transform: translateX(0);*/
-  display: block;
+  transform: translateX(0);
 }
 
 .Close {

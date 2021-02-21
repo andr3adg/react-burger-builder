@@ -8,20 +8,24 @@ class Layout extends Component {
     sideDrawerVisible: false,
   };
 
-  sideDrawerHandler = () => {
-    this.setState({ sideDrawerVisible: !this.state.sideDrawerVisible });
+  sideDrawerClosedHandler = () => {
+    this.setState({ sideDrawerVisible: false });
+  };
+
+  sideDrawerToggleHandler = () => {
+    this.setState((prevState) => {
+      return { sideDrawerVisible: !prevState.sideDrawerVisible };
+    });
   };
 
   render() {
     return (
       <Fragment>
-        {this.state.sideDrawerVisible && (
-          <SideDrawer
-            isVisible={this.state.sideDrawerVisible}
-            sideDrawerAction={this.sideDrawerHandler}
-          />
-        )}
-        <Toolbar sideDrawerAction={this.sideDrawerHandler} />
+        <Toolbar sideDrawerToggleAction={this.sideDrawerToggleHandler} />
+        <SideDrawer
+          isVisible={this.state.sideDrawerVisible}
+          closed={this.sideDrawerClosedHandler}
+        />
         <main className={classes.Content}>{this.props.children}</main>
       </Fragment>
     );
