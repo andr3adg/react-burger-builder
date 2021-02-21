@@ -23,9 +23,18 @@
   }
 }
 
+@media (min-width: 500px) {
+  .Hamburger {
+    display: none;
+  }
+}
 .Hamburger {
+  background-color: #703b09;
+}
+
+.HamburgerLine {
   width: 35px;
   height: 5px;
-  background-color: black;
+  background-color: white;
   margin: 6px 0;
 }
