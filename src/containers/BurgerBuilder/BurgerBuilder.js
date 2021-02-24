@@ -5,6 +5,7 @@ import Modal from "../../components/UI/Modal/Modal";
 import OrderSummary from "../../components/Burger/OrderSummary/OrderSummary";
 import Spinner from "../../components/UI/Spinner/Spinner";
 import axios from "../../axios-orders";
+import ErrorHandler from "../../components/ErrorHandler/ErrorHandler";
 
 const INGREDIENT_PRICES = {
   salad: 0.5,
@@ -15,17 +16,22 @@ const INGREDIENT_PRICES = {
 
 class BurgerBuilder extends Component {
   state = {
-    ingredients: {
-      salad: 0,
-      bacon: 0,
-      cheese: 0,
-      meat: 0,
-    },
+    ingredients: null,
     totalPrice: 4,
     purchasable: false,
     purchasing: false,
     processingOrder: false,
+    error: false,
   };
+
+  componentDidMount() {
+    axios
+      .get("/ingredients.json")
+      .then((response) => {
+        this.setState({ ingredients: response.data });
+      })
+      .catch((err) => console.log("error: ", err));
+  }
 
   addIngredientHandler = (type) => {
     let auxIngredients = { ...this.state.ingredients };
@@ -89,11 +95,9 @@ class BurgerBuilder extends Component {
       .post("/orders.json", order)
       .then((response) => {
         this.setState({ processingOrder: false, purchasing: false });
-        console.log("response: ", response);
       })
       .catch((err) => {
         this.setState({ processingOrder: false, purchasing: false });
-        console.log("err: ", err);
       });
   };
 
@@ -118,7 +122,11 @@ class BurgerBuilder extends Component {
             )}
           </Modal>
         )}
-        <Burger ingredients={this.state.ingredients} />
+        {this.state.ingredients ? (
+          <Burger ingredients={this.state.ingredients} />
+        ) : (
+          <Spinner />
+        )}
         <BuildControls
           addIngredient={this.addIngredientHandler}
           removeIngredient={this.removeIngredientHandler}
@@ -132,4 +140,4 @@ class BurgerBuilder extends Component {
   }
 }
 
-export default BurgerBuilder;
+export default ErrorHandler(BurgerBuilder, axios);
